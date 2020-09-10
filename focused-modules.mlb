@@ -1,0 +1,27 @@
+$(SML_LIB)/basis/basis.mlb
+
+cmlib/cmlib.mlb
+sml-personal-lib/personal.mlb
+
+pretty.sml
+
+syntax.sml
+
+basis a = bas
+        env.sml
+        singleton.sml
+        statics.sml
+
+        token.sml
+        make_lexer.sml
+        lexer.sml
+        make_parser.sml
+        parser.sml
+end
+
+basis b = bas
+        dynamics.sml
+end
+
+open a b
+main.sml

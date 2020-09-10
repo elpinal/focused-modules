@@ -1,0 +1,43 @@
+sml
+name MakeLexer
+alphabet 128 /* 1024 is maximum */
+
+set digit = (range '0 '9)
+set digit_start = (range '1 '9)
+
+set lower = (range 'a 'z)
+set upper = (range 'A 'Z)
+set alpha = (or lower upper)
+set alphanumeric = (or digit alpha)
+set ident = (or '_ alphanumeric)
+
+set whitechar = (or 32 9 10)  /* space, tab, lf */
+
+function lex : t =
+  '= => equal
+  ': => colon
+  '* => asterisk
+  ', => comma
+  '/ => slash
+
+  '1 => one
+
+  (seq '- '>) => rarrow
+  (seq '< '-) => larrow
+  '( => lparen
+  ') => rparen
+  '[ => lbrack
+  '] => rbrack
+  "(|" => lwhiteparen
+  "|)" => rwhiteparen
+  "<|" => lwhiteangle
+  "|>" => rwhiteangle
+  ":>" => seal
+  (seq lower (* ident) (* '')) => lower_ident
+  (seq upper (* ident) (* '')) => upper_ident
+  (seq '' lower (* ident))     => quote_ident
+  '. => dot
+  (+ whitechar) => whitespace
+
+  epsilon => illegal
+  eos => eof

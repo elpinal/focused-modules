@@ -1,0 +1,7 @@
+[submodule "sml-personal-lib"]
+	path = sml-personal-lib
+	url = https://github.com/elpinal/sml-personal-lib
+[submodule "cmlib"]
+	path = cmlib
+	url = https://github.com/elpinal/cmlib-mosml
+        branch = smltojs
