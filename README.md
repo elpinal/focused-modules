@@ -24,7 +24,7 @@ $ ./run
 
 ```
 $ make mlton
-$ ./focused-modules
+$ ./focused-modules-cli
 ```
 
 ## Syntax
