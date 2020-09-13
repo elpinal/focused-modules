@@ -49,10 +49,14 @@ nonterminal Program : program =
 
 nonterminal Module : module =
   1:ModuleApp => module_app
-  FUN LPAREN 1:TVar SLASH 2:UPPER_IDENT COLON 3:Sig RPAREN RARROW 4:Module => mabs
+  FUN 1:ModuleParams RARROW 2:Module => mabs
   LET 1:LOWER_IDENT EQUAL 2:Term IN 3:Module                => mlet
   LET 1:TVar SLASH 2:UPPER_IDENT EQUAL 3:Module IN 4:Module => mletmodule
   CIRC 1:LaxModule                                          => mcirc
+
+nonterminal ModuleParams : module_params =
+  /* empty */ => empty_module_params
+  LPAREN 1:TVar SLASH 2:UPPER_IDENT COLON 3:Sig RPAREN 4:ModuleParams => cons_module_params
 
 nonterminal ModuleApp : module =
   1:ModuleAtom => module_atom
@@ -92,9 +96,13 @@ nonterminal TVar : tvar =
 
 nonterminal Type : tycon =
   1:TypeBin => type_bin
-  FUN LPAREN 1:TVar COLON 2:Kind RPAREN RARROW 3:Type => tabs
+  FUN 1:TypeParams RARROW 2:Type => tabs
   FORALL 1:TVar COLON 2:Kind DOT 3:Type => tforall
   1:Exist => texist
+
+nonterminal TypeParams : type_params =
+  /* empty */ => empty_type_params
+  LPAREN 1:TVar COLON 2:Kind RPAREN 3:TypeParams => cons_type_params
 
 nonterminal Exist : existential =
   EXIST 1:TVar COLON 2:Kind DOT 3:Type => exist

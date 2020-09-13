@@ -25,11 +25,15 @@ structure Parser = MakeParser (struct
     type lax_module = lax_module
     type existential = kind * tycon
     type term_params = (var * tycon) list
+    type type_params = (tvar * kind) list
+    type module_params = (tvar * mvar * sign) list
 
     fun program_module x = x
     fun module_atom x = x
     fun module_app x = x
     fun module_paren x = x
+    fun empty_module_params () = []
+    fun cons_module_params (v, mv, s, xs) = (v, mv, s) :: xs
     val mvar = MVar
     fun mstar () = MStar
     fun mstatic ty = MStatic ty
@@ -38,7 +42,7 @@ structure Parser = MakeParser (struct
     val mapp = MApp
     fun mfst x = MProj(Fst, x)
     fun msnd x = MProj(Snd, x)
-    fun mabs (v, mv, s, x) = MAbs(mv, s, close_at_module 0 v x)
+    fun mabs (xs, x) = foldr (fn ((v, mv, s), acc) => MAbs(mv, s, close_at_module 0 v acc)) x xs
     fun mlet (v, e, x) = MLet(v, e, x)
     fun mletmodule (v, mv, x, y) = MLetModule(mv, x, close_at_module 0 v y)
     fun mcirc l = MCirc l
@@ -52,9 +56,11 @@ structure Parser = MakeParser (struct
     fun type_bin x = x
     fun type_app x = x
     fun type_atom x = x
+    fun empty_type_params () = []
+    fun cons_type_params (v, k, xs) = (v, k) :: xs
     fun quote_ident s = TVar.from_string s
     fun tvar_ v = TFree v
-    fun tabs (v, k, ty) = TAbs(k, close_at_tycon 0 v ty)
+    fun tabs (xs, ty) = foldr (fn ((v, k), acc) => TAbs(k, close_at_tycon 0 v acc)) ty xs
     fun tstar () = TStar
     fun tunit () = TUnit
     val tpair = TPair
