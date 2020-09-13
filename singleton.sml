@@ -63,13 +63,14 @@ end = struct
     SOME(get_natural_kind env p)
     handle NotPath _ => NONE
 
-  fun normalize env =
-    fn TApp(x, y)  => normalize_app env (normalize env x) y
-     | TProj(i, x) => normalize_proj env i $ normalize env x
-     | ty          =>
-        case get_natural_kind env ty of
-            SOME (KSingleton ty1) => normalize env ty1
-          | _ => ty
+  fun normalize env ty =
+    case get_natural_kind env ty of
+         SOME (KSingleton ty1) => normalize env ty1
+       | _ =>
+           case ty of
+                TApp(x, y)  => normalize_app env (normalize env x) y
+              | TProj(i, x) => normalize_proj env i $ normalize env x
+              | _           => ty
 
   and normalize_app env x y =
     case x of
