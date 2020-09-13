@@ -24,6 +24,7 @@ structure Parser = MakeParser (struct
     type term = term
     type lax_module = lax_module
     type existential = kind * tycon
+    type term_params = (var * tycon) list
 
     fun program_module x = x
     fun module_atom x = x
@@ -87,6 +88,8 @@ structure Parser = MakeParser (struct
       else PExist(k, close_at_pos_sig 0 v p)
 
     fun term_id x = x
+    fun empty_term_params () = []
+    fun cons_term_params (v, ty, xs) = (v, ty) :: xs
     val evar = EVar
     fun estar () = EStar
     val epair = EPair
@@ -96,7 +99,7 @@ structure Parser = MakeParser (struct
     fun efst x = EProj(Fst, x)
     fun esnd x = EProj(Snd, x)
     val einst = EInst
-    val eabs = EAbs
+    fun eabs (xs, e) = foldr (fn ((v, ty), acc) => EAbs(v, ty, acc)) e xs
     fun egen (v, k, x) = EGen(k, close_at_term 0 v x)
     fun epack (w, x, (k, ty)) = EPack(w, x, k, ty)
     val elet = ELet

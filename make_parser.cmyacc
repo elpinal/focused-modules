@@ -126,12 +126,16 @@ nonterminal Kind : kind =
 
 nonterminal Term : term =
   1:TermApp => term_id
-  FUN LPAREN 1:LOWER_IDENT COLON 2:Type RPAREN RARROW 3:Term => eabs
+  FUN 1:TermParams RARROW 2:Term => eabs
   POLY LPAREN 1:TVar COLON 2:Kind RPAREN RARROW 3:Term => egen
   PACK LBRACK 1:Type COMMA 2:Term RBRACK AS 3:Exist => epack
   UNPACK LBRACK 1:TVar COMMA 2:LOWER_IDENT RBRACK EQUAL 3:Term IN 4:Term => eunpack
   LET 1:LOWER_IDENT EQUAL 2:Term IN 3:Term => elet
   LET 1:TVar SLASH 2:UPPER_IDENT EQUAL 3:LaxModule IN 4:Term => eletlax
+
+nonterminal TermParams : term_params =
+  /* empty */ => empty_term_params
+  LPAREN 1:LOWER_IDENT COLON 2:Type RPAREN 3:TermParams => cons_term_params
 
 nonterminal TermApp : term =
   1:TermAtom => term_id
