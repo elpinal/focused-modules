@@ -1,7 +1,9 @@
 type path = tycon
 
 structure SK : sig
+  exception NotSubkind of kind * kind
   exception PathMismatch of env * tycon * tycon
+  exception VarMismatch of tvar * tvar
 
   val get_natural_kind : env -> path -> kind option
   val normalize        : env -> tycon -> tycon
