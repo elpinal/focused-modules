@@ -24,3 +24,5 @@ end
        | M.ValueRestriction _ =>
            Err "value restriction: the body of a polymorphic function must be a syntactic value"
        | LexerError.Illegal (SOME c) => Err ("illegal character:" <+> Char.toString c)
+       | M.CannotApplyNonFunction ty =>
+           Err ("cannot apply a term of non-function type:" <+> Show.show_type 0 ty)
