@@ -33,6 +33,7 @@ The syntax is what is described in the paper, extended with let-binding for ordi
 
 - Supports n-ary lambda abstraction at term, type and module level.
 - Supports shorthand `M` for `'a/M` when `'a` does not occur free in the scope.
+- Supports non-dependent versions of functions and products.
 
 ## Reference
 ### A focused solution to the avoidance problem.
