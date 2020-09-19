@@ -24,5 +24,9 @@ basis b = bas
         dynamics.sml
 end
 
-open a b
+basis c = bas
+        special_char.sml
+end
+
+open a b c
 main.sml

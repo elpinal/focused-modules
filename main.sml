@@ -5,9 +5,29 @@ datatype 'a result
   = Ok of 'a
   | Err of string
 
+exception UnicodeError
+
+fun handle_utf8 (w : word, cs : char Stream.stream) : char Stream.stream =
+let open Stream in
+  case SpecialChar.classify w of
+       SOME x => cs @ Stream.fromList (String.explode $ SpecialChar.as_ascii x)
+     | NONE   => cs @ (eager $ Cons(Char.chr $ Word.toInt w, eager Nil))
+     handle Overflow => raise UnicodeError
+          | Chr      => raise UnicodeError
+end
+
+fun process_stream (stream : char Stream.stream) : char Stream.stream =
+let open Stream in
+  stream
+  |> toList
+  |> String.implode
+  |> Utf8.fromString
+  |> Utf8.foldl handle_utf8 (eager Nil)
+end handle Chr => raise UnicodeError
+
 fun main stream =
 let
-  val m : module = #1 $ Parser.parse $ Lexer.lex stream
+  val m : module = #1 $ Parser.parse $ Lexer.lex $ process_stream stream
   val s : sign = M.synthesize_signature Env.initial m
   val e : dyn_term = snd_module m
   val e : dyn_term = evaluate e
