@@ -11,11 +11,15 @@ signature ENV = sig
   end
 
   structure Val : sig
+    exception Unbound of var
+
     val lookup : t -> var -> tycon
     val insert : var -> tycon -> t -> t
   end
 
   structure Module : sig
+    exception Unbound of mvar
+
     val lookup : t -> mvar -> sign * tvar
     val insert : tvar -> mvar -> kind -> sign -> t -> t
   end

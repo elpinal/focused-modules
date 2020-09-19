@@ -18,6 +18,15 @@ end
        | ParserError.UnexpectedToken (SOME t) => Err ("parse error: unexpected token:" <+> Token.show t)
        | ParserError.ForbiddenExistentialSignature =>
            Err "parse error: existential signatures are forbidden to write for decidability reason"
+       | Env.Module.Unbound v => Err ("unbound module variable:" <+> v)
+       | Env.Val.Unbound v    => Err ("unbound value variable:" <+> v)
+       | Env.Type.Unbound v   => Err ("unbound type variable:" <+> TVar.show v)
+       | SK.CannotApplyNonFunction k =>
+           Err ("cannot apply a type of non-function kind:" <+> Show.show_kind k)
+       | SK.CannotProjectNonProduct k =>
+           Err ("cannot project out from a type of non-product kind:" <+> Show.show_kind k)
+       | SK.KindMismatch(x, y) =>
+           Err ("kind mismatch:" <+> Show.show_kind x <+> "vs." <+> Show.show_kind y)
        | SK.PathMismatch(_, x, y) =>
            Err ("path mismatch:" <+> Show.show_type 0 x <+> "vs." <+> Show.show_type 0 y)
        | SK.NotSubkind(x, y) =>
@@ -26,8 +35,12 @@ end
            Err ("type variable mismatch:" <+> TVar.show x <+> "vs." <+> TVar.show y)
        | M.CannotExtractNonDynamic s =>
            Err ("cannot extract a term from a non-dynamic-atomic module:" <+> Show.show_sig s)
+       | M.CannotApplyNonFunctor s =>
+           Err ("cannot apply a module of non-functor signature:" <+> Show.show_sig s)
        | M.CannotProjectNonProduct s =>
            Err ("cannot project out from a module of non-product signature:" <+> Show.show_sig s)
+       | M.CannotBindNonMonad s =>
+           Err ("cannot bind a module of non-monadic signature:" <+> Show.show_sig s)
        | M.NotSubsignature(x, y) =>
            Err ("the following subsignature relation does not hold:" <+> Show.show_sig x <+> "<:" <+> Show.show_sig y)
        | M.ValueRestriction _ =>
@@ -38,4 +51,6 @@ end
            Err ("cannot project out from a term of non-product type:" <+> Show.show_type 0 ty)
        | M.CannotUnpackNonExist ty =>
            Err ("cannot unpack a term of non-existential type:" <+> Show.show_type 0 ty)
+       | M.CannotInstNonUniversal ty =>
+           Err ("cannot instantiate a term of non-universal type:" <+> Show.show_type 0 ty)
        | LexerError.Illegal (SOME c) => Err ("illegal character:" <+> Char.toString c)

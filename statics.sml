@@ -92,7 +92,6 @@ functor F(X : SK) = struct
   exception CannotApplyNonFunctor of sign
   exception CannotProjectNonProduct of sign
   exception CannotBindNonMonad of sign
-  exception NotPosSubsignature of pos_sig * pos_sig
   exception NotSubsignature of sign * sign
   exception CannotExtractNonDynamic of sign
   exception CannotInstNonUniversal of tycon
@@ -100,6 +99,9 @@ functor F(X : SK) = struct
   exception CannotProjectNonProductType of tycon
   exception CannotApplyNonFunction of tycon
   exception ValueRestriction of term
+
+  (* This error is impossible due to the syntactic restriction. *)
+  exception NotPosSubsignature of pos_sig * pos_sig
 
   (* The argument must be locally closed. *)
   val rec inhabit =

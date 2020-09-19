@@ -1,6 +1,9 @@
 type path = tycon
 
 structure SK : sig
+  exception CannotApplyNonFunction of kind
+  exception CannotProjectNonProduct of kind
+  exception KindMismatch of kind * kind
   exception NotSubkind of kind * kind
   exception PathMismatch of env * tycon * tycon
   exception VarMismatch of tvar * tvar
