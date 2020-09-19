@@ -31,5 +31,11 @@ end
        | LexerError.Illegal (SOME c) => Err ("illegal character:" <+> Char.toString c)
        | M.CannotApplyNonFunction ty =>
            Err ("cannot apply a term of non-function type:" <+> Show.show_type 0 ty)
+       | M.CannotProjectNonProductType ty =>
+           Err ("cannot project out from a term of non-product type:" <+> Show.show_type 0 ty)
+       | M.CannotUnpackNonExist ty =>
+           Err ("cannot unpack a term of non-existential type:" <+> Show.show_type 0 ty)
        | M.CannotExtractNonDynamic s =>
            Err ("cannot extract a term from a non-dynamic-atomic module:" <+> Show.show_sig s)
+       | M.CannotProjectNonProduct s =>
+           Err ("cannot project out from a module of non-product signature:" <+> Show.show_sig s)
