@@ -31,6 +31,9 @@ $ ./focused-modules-cli
 
 The syntax is what is described in the paper, extended with let-binding for ordinary modules.
 
+- Supports n-ary lambda abstraction at term, type and module level.
+- Supports shorthand `M` for `'a/M` when `'a` does not occur free in the scope.
+
 ## Reference
 ### A focused solution to the avoidance problem.
 
