@@ -81,10 +81,15 @@ nonterminal LaxModule : lax_module =
   UNPACK LBRACK 1:TVar COMMA 2:LOWER_IDENT RBRACK EQUAL 3:Term IN 4:LaxModule => lunpack
 
 nonterminal Sig : sign =
-  1:SigAtom     => sig_id
+  1:SigBin      => sig_id
   CIRC 1:PosSig => smonad
   CAP_PI 1:TVar COLON 2:Sig DOT 3:Sig    => sarrow
   CAP_SIGMA 1:TVar COLON 2:Sig DOT 3:Sig => sprod
+
+nonterminal SigBin : sign =
+  1:SigAtom                => sig_id
+  1:SigBin RARROW 2:SigBin => sarrow_degenerate
+  1:SigBin STAR 2:SigBin   => sprod_degenerate
 
 nonterminal SigAtom : sign =
   ONE                            => sunit
@@ -136,10 +141,15 @@ nonterminal TypeAtom : tycon =
   ONE => tunit
 
 nonterminal Kind : kind =
-  1:KindAtom             => kind_id
+  1:KindBin              => kind_id
   S LPAREN 1:Type RPAREN => ksingleton
   CAP_PI 1:TVar COLON 2:Kind DOT 3:Kind    => karrow
   CAP_SIGMA 1:TVar COLON 2:Kind DOT 3:Kind => kprod
+
+nonterminal KindBin : kind =
+  1:KindAtom                 => kind_id
+  1:KindBin RARROW 2:KindBin => karrow_degenerate
+  1:KindBin STAR 2:KindBin   => kprod_degenerate
 
 nonterminal KindAtom : kind =
   ONE                  => kunit

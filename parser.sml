@@ -92,6 +92,8 @@ structure Parser = MakeParser (struct
     val ksingleton = KSingleton
     fun karrow (v, x, y) = KArrow(x, close_at_kind 0 v y)
     fun kprod (v, x, y) = KProd(x, close_at_kind 0 v y)
+    fun karrow_degenerate (x, y) = KArrow(x, y)
+    fun kprod_degenerate (x, y) = KProd(x, y)
 
     fun sig_id x = x
     fun sunit () = SUnit
@@ -99,6 +101,8 @@ structure Parser = MakeParser (struct
     val sdynamic = SDynamic
     fun sarrow (v, x, y) = SArrow(x, close_at_sig 0 v y)
     fun sprod (v, x, y) = SProd(x, close_at_sig 0 v y)
+    fun sarrow_degenerate (x, y) = SArrow(x, y)
+    fun sprod_degenerate (x, y) = SProd(x, y)
     val smonad = SMonad
 
     fun pos_sig_id x = x
