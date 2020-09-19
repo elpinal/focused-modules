@@ -118,12 +118,12 @@ nonterminal Exist : existential =
   EXIST 1:TVar COLON 2:Kind DOT 3:Type => exist
 
 nonterminal TypeBin : tycon =
-  1:TypeApp => type_app
+  1:TypeApp                  => type_app
   1:TypeBin RARROW 2:TypeBin => tarrow
-  1:TypeBin STAR 2:TypeBin => tprod
+  1:TypeBin STAR 2:TypeBin   => tprod
 
 nonterminal TypeApp : tycon =
-  1:TypeAtom => type_atom
+  1:TypeAtom           => type_atom
   1:TypeApp 2:TypeAtom => tapp
   FST 1:TypeAtom       => tfst
   SND 1:TypeAtom       => tsnd
