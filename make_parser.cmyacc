@@ -40,7 +40,7 @@ terminal COLON
 terminal SEAL
 terminal RARROW precr 20
 terminal LARROW
-terminal STAR precl 30
+terminal STAR precr 30
 terminal EQUAL
 terminal SLASH
 terminal DOT

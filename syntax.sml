@@ -383,7 +383,7 @@ structure Show = struct
          show_type 3 x <+> "->" <+> show_type 2 y
      | TProd(x, y) =>
          paren (n > 3) $
-         show_type 3 x <+> "*" <+> show_type 4 y
+         show_type 4 x <+> "*" <+> show_type 3 y
      | TForall(k, x) =>
          let val fv = TVar.fresh () in
            paren (n > 0) $
@@ -401,25 +401,25 @@ structure Show = struct
     | KSingleton ty => "S" <> paren true (show_type 0 ty)
     | KArrow(x, y)  =>
         let val fv = TVar.fresh () in
-          paren true (TVar.show fv <:> show_kind x) <+> "->" <+> show_kind (open_at_kind 0 (TFree fv) y)
+          "Π" <> TVar.show fv <:> show_kind x <> "." <+> show_kind (open_at_kind 0 (TFree fv) y)
         end
     | KProd(x, y)  =>
         let val fv = TVar.fresh () in
-          paren true (TVar.show fv <:> show_kind x) <+> "*" <+> show_kind (open_at_kind 0 (TFree fv) y)
+          "Σ" <> TVar.show fv <:> show_kind x <> "." <+> show_kind (open_at_kind 0 (TFree fv) y)
         end
 
   fun show_sig s =
     case s of
-         SUnit => "1"
-       | SStatic k => "(|" <> show_kind k <> "|)"
-       | SDynamic ty => "<|" <> show_type 0 ty <> "|>"
+         SUnit        => "1"
+       | SStatic k    => "(|" <> show_kind k <> "|)"
+       | SDynamic ty  => "<|" <> show_type 0 ty <> "|>"
        | SArrow(x, y) =>
            let val fv = TVar.fresh () in
-             paren true (TVar.show fv <:> show_sig x) <+> "->" <+> show_sig (open_at_sig 0 (TFree fv) y)
+             "Π" <> TVar.show fv <:> show_sig x <> "." <+> show_sig (open_at_sig 0 (TFree fv) y)
            end
        | SProd(x, y) =>
            let val fv = TVar.fresh () in
-             paren true (TVar.show fv <:> show_sig x) <+> "*" <+> show_sig (open_at_sig 0 (TFree fv) y)
+             "Σ" <> TVar.show fv <:> show_sig x <> "." <+> show_sig (open_at_sig 0 (TFree fv) y)
            end
        | SMonad p => "○" <> paren true (show_pos_sig p)
 
