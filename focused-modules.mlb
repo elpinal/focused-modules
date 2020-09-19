@@ -2,6 +2,7 @@ $(SML_LIB)/basis/basis.mlb
 
 cmlib/cmlib.mlb
 sml-personal-lib/personal.mlb
+unicode/unicode.mlb
 
 pretty.sml
 

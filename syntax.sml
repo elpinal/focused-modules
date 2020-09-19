@@ -387,12 +387,12 @@ structure Show = struct
      | TForall(k, x) =>
          let val fv = TVar.fresh () in
            paren (n > 0) $
-           "forall" <+> TVar.show fv <:> show_kind k <> "." <+> show_type 0 (open_at_tycon 0 (TFree fv) x)
+           "∀" <> TVar.show fv <:> show_kind k <> "." <+> show_type 0 (open_at_tycon 0 (TFree fv) x)
          end
      | TExist(k, x) =>
          let val fv = TVar.fresh () in
            paren (n > 0) $
-           "exist" <+> TVar.show fv <:> show_kind k <> "." <+> show_type 0 (open_at_tycon 0 (TFree fv) x)
+           "∃" <> TVar.show fv <:> show_kind k <> "." <+> show_type 0 (open_at_tycon 0 (TFree fv) x)
          end
 
   and show_kind ty = case ty of
@@ -428,6 +428,6 @@ structure Show = struct
          PDown s => show_sig s
        | PExist(k, x) =>
            let val fv = TVar.fresh () in
-             "exist" <+> TVar.show fv <:> show_kind k <> "." <+> show_pos_sig (open_at_pos_sig 0 (TFree fv) x)
+             "∃" <> TVar.show fv <:> show_kind k <> "." <+> show_pos_sig (open_at_pos_sig 0 (TFree fv) x)
            end
 end
