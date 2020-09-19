@@ -86,6 +86,7 @@ structure Parser = MakeParser (struct
     fun exist (v, k, ty) = (k, close_at_tycon 0 v ty)
     fun texist x = TExist x
 
+    fun kind_id x = x
     fun kunit () = KUnit
     fun ktype () = KType
     val ksingleton = KSingleton

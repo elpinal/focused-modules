@@ -136,11 +136,15 @@ nonterminal TypeAtom : tycon =
   ONE => tunit
 
 nonterminal Kind : kind =
-  ONE => kunit
-  CAP_TYPE => ktype
+  1:KindAtom             => kind_id
   S LPAREN 1:Type RPAREN => ksingleton
-  LPAREN 1:TVar COLON 2:Kind RPAREN RARROW 3:Kind => karrow
-  LPAREN 1:TVar COLON 2:Kind RPAREN STAR 3:Kind => kprod
+  CAP_PI 1:TVar COLON 2:Kind DOT 3:Kind    => karrow
+  CAP_SIGMA 1:TVar COLON 2:Kind DOT 3:Kind => kprod
+
+nonterminal KindAtom : kind =
+  ONE                  => kunit
+  CAP_TYPE             => ktype
+  LPAREN 1:Kind RPAREN => kind_id
 
 nonterminal Term : term =
   1:TermApp => term_id
