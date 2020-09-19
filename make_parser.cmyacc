@@ -8,6 +8,8 @@ terminal QUOTE_IDENT of string
 terminal ONE
 terminal CAP_TYPE
 terminal CAP_EXT
+terminal CAP_PI
+terminal CAP_SIGMA
 terminal S
 terminal FUN
 terminal FST

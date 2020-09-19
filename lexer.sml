@@ -1,5 +1,6 @@
 structure LexerError = struct
   exception Illegal of char option
+  exception IllegalBackSlash of string
 end
 
 structure Lexer = MakeLexer (struct
@@ -60,6 +61,15 @@ structure Lexer = MakeLexer (struct
 
     fun quote_ident ({match, self, follow, ...} : info) =
       Stream.lazy (fn () => Stream.Cons(QUOTE_IDENT(String.implode (List.tl match)), #lex self follow))
+
+    fun backslash_ident ({match, self, follow, ...} : info) =
+    let val f =
+      fn "Pi"     => CAP_PI
+       | "Sigma"  => CAP_SIGMA
+       | s        => raise IllegalBackSlash(s)
+    in
+      Stream.lazy (fn () => Stream.Cons(f (String.implode (List.tl match)), #lex self follow))
+    end
 
     fun upper_ident ({match, self, follow, ...} : info) =
     let val f =

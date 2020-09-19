@@ -36,6 +36,7 @@ function lex : t =
   (seq lower (* ident) (* '')) => lower_ident
   (seq upper (* ident) (* '')) => upper_ident
   (seq '' lower (* ident))     => quote_ident
+  (seq '\ (* alphanumeric))    => backslash_ident
   '. => dot
   (+ whitechar) => whitespace
 
