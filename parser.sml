@@ -92,6 +92,7 @@ structure Parser = MakeParser (struct
     fun karrow (v, x, y) = KArrow(x, close_at_kind 0 v y)
     fun kprod (v, x, y) = KProd(x, close_at_kind 0 v y)
 
+    fun sig_id x = x
     fun sunit () = SUnit
     val sstatic = SStatic
     val sdynamic = SDynamic

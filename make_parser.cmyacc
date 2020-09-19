@@ -81,17 +81,21 @@ nonterminal LaxModule : lax_module =
   UNPACK LBRACK 1:TVar COMMA 2:LOWER_IDENT RBRACK EQUAL 3:Term IN 4:LaxModule => lunpack
 
 nonterminal Sig : sign =
-  ONE => sunit
+  1:SigAtom     => sig_id
+  CIRC 1:PosSig => smonad
+  CAP_PI 1:TVar COLON 2:Sig DOT 3:Sig    => sarrow
+  CAP_SIGMA 1:TVar COLON 2:Sig DOT 3:Sig => sprod
+
+nonterminal SigAtom : sign =
+  ONE                            => sunit
+  LPAREN 1:Sig RPAREN            => sig_id
   LWHITEPAREN 1:Kind RWHITEPAREN => sstatic
   LWHITEANGLE 1:Type RWHITEANGLE => sdynamic
-  LPAREN 1:TVar COLON 2:Sig RPAREN RARROW 3:Sig => sarrow
-  LPAREN 1:TVar COLON 2:Sig RPAREN STAR 3:Sig => sprod
-  CIRC 1:PosSig                               => smonad
 
 nonterminal PosSig : pos_sig =
   1:Sig => pdown /* We omit explicit down-shift. */
   EXIST 1:TVar COLON 2:Kind DOT 3:PosSig => pexist
-  LPAREN 1:PosSig RPAREN                 => pos_sig_id
+  /* LPAREN 1:PosSig RPAREN                 => pos_sig_id */
 
 nonterminal TVar : tvar =
   1:QUOTE_IDENT => quote_ident
