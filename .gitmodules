@@ -5,3 +5,6 @@
 	path = cmlib
 	url = https://github.com/elpinal/cmlib-mosml
         branch = smltojs
+[submodule "unicode"]
+	path = unicode
+	url = https://github.com/melsman/unicode
