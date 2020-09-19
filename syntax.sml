@@ -421,7 +421,7 @@ structure Show = struct
            let val fv = TVar.fresh () in
              paren true (TVar.show fv <:> show_sig x) <+> "*" <+> show_sig (open_at_sig 0 (TFree fv) y)
            end
-       | SMonad p => "circ" <+> paren true (show_pos_sig p)
+       | SMonad p => "○" <> paren true (show_pos_sig p)
 
   and show_pos_sig p =
     case p of
