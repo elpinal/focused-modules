@@ -26,6 +26,8 @@ terminal LET
 terminal CIRC
 terminal RET
 terminal BIND
+terminal BOOL
+terminal INT
 
 terminal LPAREN
 terminal RPAREN
@@ -139,6 +141,8 @@ nonterminal TypeAtom : tycon =
   LPAREN RPAREN                     => tstar
   LPAREN 1:Type COMMA 2:Type RPAREN => tpair
   ONE                               => tunit
+  BOOL                              => tbool
+  INT                               => tint
 
 nonterminal Kind : kind =
   1:KindBin                                => kind_id

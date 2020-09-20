@@ -56,6 +56,11 @@ datatype index
 fun index Fst (x, _) = x
   | index Snd (_, y) = y
 
+(* Base type constructor. It can be higher-kinded. *)
+datatype base
+  = BBool
+  | BInt
+
 datatype kind
   = KUnit
   | KType
@@ -73,6 +78,7 @@ and tycon
   | TProj of index * tycon
 
   | TUnit (* Unit type *)
+  | TBase of base
   | TArrow of tycon * tycon
   | TProd of tycon * tycon
   | TForall of kind * tycon
@@ -138,6 +144,7 @@ let fun iter x = close_at_tycon j fv x in
    | TPair(x, y)   => TPair(iter x, iter y)
    | TProj(i, x)   => TProj(i, iter x)
    | TUnit         => TUnit
+   | TBase b       => TBase b
    | TArrow(x, y)  => TArrow(iter x, iter y)
    | TProd(x, y)   => TProd(iter x, iter y)
    | TForall(k, x) => TForall(close_at_kind j fv k, close_at_tycon (j + 1) fv x)
@@ -215,6 +222,7 @@ let fun iter x = open_at_tycon j by x in
    | TPair(x, y)   => TPair(iter x, iter y)
    | TProj(i, x)   => TProj(i, iter x)
    | TUnit         => TUnit
+   | TBase b       => TBase b
    | TArrow(x, y)  => TArrow(iter x, iter y)
    | TProd(x, y)   => TProd(iter x, iter y)
    | TForall(k, x) => TForall(open_at_kind j by k, open_at_tycon (j + 1) by x)
@@ -363,6 +371,10 @@ structure Show = struct
   fun show_index Fst = "fst"
     | show_index Snd = "snd"
 
+  val show_base =
+    fn BBool => "bool"
+     | BInt  => "int"
+
   fun show_type n =
     fn TBound _   => raise Unreachable
      | TFree v    => TVar.show v
@@ -378,6 +390,7 @@ structure Show = struct
      | TPair(x, y)  => paren true $ show_type 0 x <> "," <+> show_type 0 y
      | TProj(i, x)  => paren (n > 4) $ show_index i <+> show_type 5 x
      | TUnit        => "1"
+     | TBase b      => show_base b
      | TArrow(x, y) =>
          paren (n > 2) $
          show_type 3 x <+> "->" <+> show_type 2 y

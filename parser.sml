@@ -76,6 +76,8 @@ structure Parser = MakeParser (struct
     fun tabs (xs, ty) = foldr (fn ((v, k), acc) => TAbs(k, close_at_tycon 0 v acc)) ty xs
     fun tstar () = TStar
     fun tunit () = TUnit
+    fun tbool () = TBase BBool
+    fun tint () = TBase BInt
     val tpair = TPair
     val tapp = TApp
     fun tfst x = TProj(Fst, x)

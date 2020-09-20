@@ -106,7 +106,7 @@ functor F(X : SK) = struct
   (* The argument must be locally closed. *)
   val rec inhabit =
     fn KUnit         => TStar
-     | KType         => TUnit
+     | KType         => TUnit (* TODO: Use a designated type rather than `unit` type. *)
      | KSingleton ty => ty
      | KArrow(x, y)  =>
          let val fv = TVar.fresh () in

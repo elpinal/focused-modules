@@ -53,6 +53,8 @@ end
            Err ("the following subkind relation does not hold:" <+> Show.show_kind x <+> "<:" <+> Show.show_kind y)
        | SK.VarMismatch(x, y) =>
            Err ("type variable mismatch:" <+> TVar.show x <+> "vs." <+> TVar.show y)
+       | SK.BaseMismatch(x, y) =>
+           Err ("base type mismatch:" <+> Show.show_base x <+> "vs." <+> Show.show_base y)
        | M.CannotExtractNonDynamic s =>
            Err ("cannot extract a term from a non-dynamic-atomic module:" <+> Show.show_sig s)
        | M.CannotApplyNonFunctor s =>

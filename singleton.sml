@@ -7,6 +7,7 @@ structure SK : sig
   exception NotSubkind of kind * kind
   exception PathMismatch of env * tycon * tycon
   exception VarMismatch of tvar * tvar
+  exception BaseMismatch of base * base
 
   val get_natural_kind : env -> path -> kind option
   val normalize        : env -> tycon -> tycon
@@ -39,14 +40,21 @@ end = struct
   exception NotSubkind of kind * kind
   exception PathMismatch of env * tycon * tycon
   exception VarMismatch of tvar * tvar
+  exception BaseMismatch of base * base
 
   exception IsThisReallyOccur of kind (* I'm doubtful whether this exception may be raised. *)
 
   exception NotPath of tycon
 
+  structure Base = struct
+    val get_natural_kind =
+      fn BBool => KType
+       | BInt  => KType
+  end
+
   fun get_natural_kind env =
-    fn TUnit => KType
-     | TFree v => Env.Type.lookup env v
+    fn TUnit       => KType (* This may be unneeded, at least for our purpose. *)
+     | TFree v     => Env.Type.lookup env v
      | TApp(p, ty) =>
          let val (_, k) = get_natural_kind env p |> Destructor.kind_arrow CannotApplyNonFunction in
            open_at_kind 0 ty k
@@ -141,7 +149,11 @@ end = struct
           if v1 = v2
           then Env.Type.lookup env v1
           else raise VarMismatch(v1, v2)
-      | (TUnit, TUnit) => KType
+      | (TUnit, TUnit)       => KType
+      | (TBase b1, TBase b2) =>
+          if b1 = b2
+          then Base.get_natural_kind b1
+          else raise BaseMismatch(b1, b2)
       | (TArrow(ty11, ty12), TArrow(ty21, ty22)) =>
           KType
           before equiv_type env ty11 ty21 KType
@@ -255,7 +267,8 @@ end = struct
                Fst => k1
              | Snd => open_at_kind 0 (TProj(Fst, ty)) k2
          end
-     | TUnit => KSingleton TUnit
+     | TUnit        => KSingleton TUnit
+     | TBase b      => Singleton.kind (TBase b) $ Base.get_natural_kind b
      | TArrow(x, y) =>
          KSingleton (TArrow(x, y))
          before kind_check env x KType

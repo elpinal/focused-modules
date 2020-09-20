@@ -21,6 +21,8 @@ structure Token = struct
     | CIRC
     | RET
     | BIND
+    | BOOL
+    | INT
 
     | LOWER_IDENT of string
     | UPPER_IDENT of string
@@ -67,6 +69,8 @@ structure Token = struct
      | CIRC      => "circ"
      | RET       => "ret"
      | BIND      => "bind"
+     | BOOL      => "bool"
+     | INT       => "int"
 
      | LOWER_IDENT s => s
      | UPPER_IDENT s => s

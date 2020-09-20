@@ -98,6 +98,8 @@ structure Lexer = MakeLexer (struct
        | "circ"   => CIRC
        | "ret"    => RET
        | "bind"   => BIND
+       | "bool"   => BOOL
+       | "int"    => INT
        | s        => LOWER_IDENT s
     in
       Stream.lazy (fn () => Stream.Cons(f (String.implode match), #lex self follow))
