@@ -88,14 +88,17 @@ nonterminal LaxModule : lax_module =
 
 nonterminal Sig : sign =
   1:SigBin                               => sig_id
-  CIRC 1:PosSig                          => smonad
   CAP_PI 1:TVar COLON 2:Sig DOT 3:Sig    => sarrow
   CAP_SIGMA 1:TVar COLON 2:Sig DOT 3:Sig => sprod
 
 nonterminal SigBin : sign =
-  1:SigAtom                => sig_id
+  1:SigApp                 => sig_id
   1:SigBin RARROW 2:SigBin => sarrow_degenerate
   1:SigBin STAR 2:SigBin   => sprod_degenerate
+
+nonterminal SigApp : sign =
+  1:SigAtom        => sig_id
+  CIRC 1:PosSigApp => smonad
 
 nonterminal SigAtom : sign =
   ONE                            => sunit
@@ -103,10 +106,13 @@ nonterminal SigAtom : sign =
   LWHITEPAREN 1:Kind RWHITEPAREN => sstatic
   LWHITEANGLE 1:Type RWHITEANGLE => sdynamic
 
-nonterminal PosSig : pos_sig =
-  1:Sig => pdown /* We omit explicit down-shift. */
-  EXIST 1:TVar COLON 2:Kind DOT 3:PosSig => pexist
-  /* LPAREN 1:PosSig RPAREN                 => pos_sig_id */
+nonterminal Exists : existentials =
+  /* empty */                            => exists_nil
+  EXIST 1:TVar COLON 2:Kind DOT 3:Exists => exists_cons
+
+nonterminal PosSigApp : pos_sig =
+  1:SigApp                                                   => pdown /* We omit explicit down-shift. */
+  LPAREN EXIST 1:TVar COLON 2:Kind DOT 3:Exists 4:Sig RPAREN => pexist
 
 nonterminal TVar : tvar =
   1:QUOTE_IDENT => quote_ident

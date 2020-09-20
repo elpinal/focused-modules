@@ -26,6 +26,7 @@ structure Parser = MakeParser (struct
     type term = term
     type lax_module = lax_module
     type existential = kind * tycon
+    type existentials = (tvar * kind) list
     type term_params = (var * tycon) list
     type type_params = (tvar * kind) list
     type module_params = (tvar_opt * mvar * sign) list
@@ -108,12 +109,14 @@ structure Parser = MakeParser (struct
     fun sprod_degenerate (x, y) = SProd(x, y)
     val smonad = SMonad
 
+    fun exists_nil () = []
+    fun exists_cons (v, k, xs) = (v, k) :: xs
     fun pos_sig_id x = x
     val pdown = PDown
-    fun pexist (v, k, p) =
+    fun pexist (v1, k1, xs, s) =
       if disallow_existential_signature
       then raise ForbiddenExistentialSignature
-      else PExist(k, close_at_pos_sig 0 v p)
+      else PExist(k1, close_at_pos_sig 0 v1 $ foldr (fn ((v, k), p) => PExist(k, close_at_pos_sig 0 v p)) (PDown s) xs)
 
     fun term_id x = x
     fun empty_term_params () = []
