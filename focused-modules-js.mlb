@@ -1,6 +1,0 @@
-focused-modules.mlb
-
-$(SML_LIB)/basis/js.mlb
-$(SML_LIB)/basis/rwp.mlb
-
-js.sml
