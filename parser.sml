@@ -13,6 +13,7 @@ structure Parser = MakeParser (struct
     open ParserError
 
     type string = string
+    type int = int
 
     type program = module
     type module = module
@@ -119,6 +120,8 @@ structure Parser = MakeParser (struct
     fun cons_term_params (v, ty, xs) = (v, ty) :: xs
     val evar = EVar
     fun estar () = EStar
+    fun eone () = ELit $ LInt 1
+    fun enum n = ELit $ LInt n
     val epair = EPair
     val eapp = EApp
     val eext = EExt

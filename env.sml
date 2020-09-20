@@ -32,7 +32,15 @@ structure Env :> ENV = struct
 
   type t = kind TMap.t * tycon VMap.t * (sign * tvar) MMap.t
 
-  val initial = (TMap.empty, VMap.empty, MMap.empty)
+  val initial : t =
+  let
+    val vm = VMap.from_list
+      [ ("false", TBase BBool)
+      , ("true", TBase BBool)
+      ]
+  in
+    (TMap.empty, vm, MMap.empty)
+  end
 
   structure Type = struct
     exception Unbound of tvar

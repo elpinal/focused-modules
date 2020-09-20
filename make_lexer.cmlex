@@ -21,6 +21,7 @@ function lex : t =
   '/ => slash
 
   '1 => one
+  (+ digit) => number
 
   (seq '- '>) => rarrow
   (seq '< '-) => larrow

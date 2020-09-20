@@ -96,9 +96,14 @@ and pos_sig (* Positive signature *)
   = PDown of sign
   | PExist of kind * pos_sig
 
+datatype lit
+  = LBool of bool
+  | LInt of int
+
 datatype term
   = EVar of var
   | EStar
+  | ELit of lit
   | EAbs of var * tycon * term
   | EApp of term * term
   | EPair of term * term
@@ -195,6 +200,7 @@ and close_at_term j fv =
 let fun iter x = close_at_term j fv x in
   fn EVar v             => EVar v
    | EStar              => EStar
+   | ELit l             => ELit l
    | EAbs(v, ty, x)     => EAbs(v, close_at_tycon j fv ty, iter x)
    | EApp(x, y)         => EApp(iter x, iter y)
    | EPair(x, y)        => EPair(iter x, iter y)
@@ -273,6 +279,7 @@ and open_at_term j by =
 let fun iter x = open_at_term j by x in
   fn EVar v             => EVar v
    | EStar              => EStar
+   | ELit l             => ELit l
    | EAbs(v, ty, x)     => EAbs(v, open_at_tycon j by ty, iter x)
    | EApp(x, y)         => EApp(iter x, iter y)
    | EPair(x, y)        => EPair(iter x, iter y)

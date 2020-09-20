@@ -3,6 +3,21 @@ structure LexerError = struct
   exception IllegalBackSlash of string
 end
 
+structure Num : sig
+  val parse : char list -> int
+end = struct
+  val ASCII_DIGIT_START = 48
+
+  fun parse_digit_in_char c = Char.ord c - ASCII_DIGIT_START
+
+  fun parse xs =
+  let
+    fun f (c, acc) = parse_digit_in_char c + 10 * acc
+  in
+    List.foldl f 0 xs
+  end
+end
+
 structure Lexer = MakeLexer (struct
   structure Streamable = StreamStreamable
   structure Arg = struct
@@ -56,6 +71,9 @@ structure Lexer = MakeLexer (struct
     fun rwhiteangle info = eager_follow info RWHITEANGLE
 
     fun one info = eager_follow info ONE
+
+    fun number ({match, self, follow, ...} : info) =
+      Stream.lazy (fn () => Stream.Cons(NUMBER(Num.parse match), #lex self follow))
 
     fun whitespace ({self, follow, ...} : info) = #lex self follow
 

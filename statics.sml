@@ -103,6 +103,12 @@ functor F(X : SK) = struct
   (* This error is impossible due to the syntactic restriction. *)
   exception NotPosSubsignature of pos_sig * pos_sig
 
+  structure Lit = struct
+    val synthesize_type =
+      fn LBool _ => TBase BBool
+       | LInt _  => TBase BInt
+  end
+
   (* The argument must be locally closed. *)
   val rec inhabit =
     fn KUnit         => TStar
@@ -297,6 +303,7 @@ functor F(X : SK) = struct
   and synthesize_type env =
     fn EVar v => Env.Val.lookup env v
      | EStar  => TUnit
+     | ELit l => Lit.synthesize_type l
      | EAbs(v, ty, x) =>
          let
            val () = X.kind_check env ty KType

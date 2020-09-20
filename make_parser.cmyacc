@@ -4,6 +4,7 @@ name MakeParser
 terminal LOWER_IDENT of string
 terminal UPPER_IDENT of string
 terminal QUOTE_IDENT of string
+terminal NUMBER of int
 
 terminal ONE
 terminal CAP_TYPE
@@ -187,5 +188,7 @@ nonterminal TermAtom : term =
   1:LOWER_IDENT                     => evar
   LPAREN RPAREN                     => estar
   LPAREN 1:Term COMMA 2:Term RPAREN => epair
+  1:NUMBER                          => enum
+  ONE                               => eone
 
 start Program

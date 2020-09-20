@@ -6,13 +6,14 @@ datatype dyn_var
   | Wildcard
 
 val show_var =
-  fn E v => v
-   | M v => v
+  fn E v      => v
+   | M v      => v
    | Wildcard => "_"
 
 datatype dyn_term
   = Var of dyn_var
   | Star
+  | Lit of lit
   | Abs of dyn_var * dyn_term
   | App of dyn_term * dyn_term
   | Pair of dyn_term * dyn_term
@@ -30,15 +31,23 @@ fun Inst x = x
 structure Dyn = struct
   open Pretty
 
+  val show_lit =
+    fn LBool b => Bool.toString b
+     | LInt n  =>
+         if 0 <= n
+         then Int.toString n
+         else "-" <> Int.toString (~n)
+
   fun show n e =
     case e of
-         Var v     => show_var v
-       | Star      => "()"
-       | Abs(v, x) => paren (n > 0) $ "fun" <+> show_var v <+> "->" <+> show 0 x
-       | App(x, y) => paren (n > 4) $ show 4 x <+> show 5 y
-       | Pair(x, y) => paren true $ show 0 x <> "," <+> show 0 y
-       | Proj(i, x) => paren (n > 4) $ Show.show_index i <+> show 5 x
-       | Fix x      => paren (n > 4) $ "fix" <+> show 5 x
+         Var v        => show_var v
+       | Star         => "()"
+       | Lit l        => show_lit l
+       | Abs(v, x)    => paren (n > 0) $ "fun" <+> show_var v <+> "->" <+> show 0 x
+       | App(x, y)    => paren (n > 4) $ show 4 x <+> show 5 y
+       | Pair(x, y)   => paren true $ show 0 x <> "," <+> show 0 y
+       | Proj(i, x)   => paren (n > 4) $ Show.show_index i <+> show 5 x
+       | Fix x        => paren (n > 4) $ "fix" <+> show 5 x
        | Let(v, x, y) => paren (n > 0) $ "let" <+> show_var v <+> "=" <+> show 0 x <+> "in" <+> show 0 y
 end
 
@@ -71,6 +80,7 @@ and translate_lax_module l = case l of
 and translate_term (e : term) : dyn_term = case e of
     EVar v            => Var $ E v
   | EStar             => Star
+  | ELit l            => Lit l
   | EAbs(v, _, x)     => Abs(E v, translate_term x)
   | EApp(x, y)        => App(translate_term x, translate_term y)
   | EPair(x, y)       => Pair(translate_term x, translate_term y)
@@ -104,11 +114,17 @@ local
       case Map.lookup v env of
            NONE   => raise RuntimeError "unbound variable"
          | SOME x => x
+
+    val initial = Map.from_list
+      [ (E "false", Lit $ LBool false)
+      , (E "true", Lit $ LBool true)
+      ]
   end
 in
   fun eval env =
-    fn Var v => Env.lookup v env
-     | Star  => Star
+    fn Var v     => Env.lookup v env
+     | Star      => Star
+     | Lit l     => Lit l
      | Abs(v, x) => Abs(v, x)
      | App(x, y) =>
          let in
@@ -126,5 +142,5 @@ in
      | Fix x => eval env $ App(x, Abs(Wildcard, Fix x))
      | Let(v, x, y) => eval (Env.Map.insert v (eval env x) env) y
 
-  val evaluate = eval Env.Map.empty
+  val evaluate = eval Env.initial
 end

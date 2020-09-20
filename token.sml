@@ -27,6 +27,7 @@ structure Token = struct
     | LOWER_IDENT of string
     | UPPER_IDENT of string
     | QUOTE_IDENT of string
+    | NUMBER of int
 
     | LPAREN
     | RPAREN
@@ -75,6 +76,7 @@ structure Token = struct
      | LOWER_IDENT s => s
      | UPPER_IDENT s => s
      | QUOTE_IDENT s => "'" ^ s
+     | NUMBER n      => Int.toString n (* What about negative integers? *)
 
      | LPAREN => "("
      | RPAREN => ")"
