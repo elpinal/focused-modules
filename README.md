@@ -35,9 +35,15 @@ The syntax is what is described in the paper, extended with let-binding for ordi
 - Supports shorthand `M` for `'a/M` when `'a` does not occur free in the scope.
 - Supports non-dependent versions of functions and products.
 
-## Reference
+## References
 ### A focused solution to the avoidance problem.
 
 Karl Crary.  
 Journal of Functional Programming, 30, e24, 2020.  
 http://www.cs.cmu.edu/~crary/papers/2020/exsig.pdf
+
+### Extensional equivalence and singleton types
+
+Christopher A. Stone and Robert Harper.  
+ACM Transactions on Computational Logic 7(4), 676–722, 2006.  
+http://www.cs.cmu.edu/~rwh/papers/singletons/tocl.pdf
