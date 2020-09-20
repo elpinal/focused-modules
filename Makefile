@@ -1,8 +1,8 @@
 mlkit: make_lexer.sml make_parser.sml
-	mlkit focused-modules-cli.mlb
+	mlkit --output focused-modules-mlkit focused-modules-cli.mlb
 
 mlton: make_lexer.sml make_parser.sml
-	mlton -default-ann 'warnUnused true' -default-ann 'allowExtendedTextConsts true' focused-modules-cli.mlb
+	mlton -output focused-modules-mlton -default-ann 'warnUnused true' -default-ann 'allowExtendedTextConsts true' focused-modules-cli.mlb
 
 make_lexer.sml: make_lexer.cmlex
 	cmlex -o make_lexer.sml make_lexer.cmlex

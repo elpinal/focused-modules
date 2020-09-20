@@ -17,14 +17,14 @@ $ cd focused-modules
 
 ```
 $ make
-$ ./run
+$ ./focused-modules-mlkit
 ```
 
 ### Build with MLton
 
 ```
 $ make mlton
-$ ./focused-modules-cli
+$ ./focused-modules-mlton
 ```
 
 ## Syntax
