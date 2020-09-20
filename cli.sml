@@ -1,14 +1,27 @@
-val ex_filename = ",example.fm"
+fun fail s =
+let
+  val () = TextIO.output (TextIO.stdErr, s ^ "\n")
+  open OS.Process
+in
+  exit failure
+end
 
-fun fail s = TextIO.output (TextIO.stdErr, s ^ "\n")
-
-val stream = Stream.fromTextInstream $ TextIO.openIn ex_filename
+val usage =
+let
+  val name = CommandLine.name ()
+in
+  "usage: " ^ name ^ " [filename]"
+end
 
 val () =
-let in
+let
+  val args = CommandLine.arguments ()
+  val stream = Stream.fromTextInstream $ TextIO.openIn $ hd args
+in
   case main stream of
        Ok(s, e) =>
          TextIO.print ("signature: " ^ Show.show_sig s ^ "\n") before
          TextIO.print ("value    : " ^ Dyn.show 0 e ^ "\n")
      | Err s => fail s
-end handle IO.Io r => fail ("cannot open: " ^ #name r)
+end handle IO.Io r    => fail ("cannot open: " ^ #name r)
+         | List.Empty => fail usage
