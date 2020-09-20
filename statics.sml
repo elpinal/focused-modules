@@ -384,6 +384,14 @@ functor F(X : SK) = struct
          in
            ty'
          end
+     | EIf(x, y, z) =>
+         let
+           val () = typecheck env x $ TBase BBool
+           val ty = synthesize_type env y
+           val () = typecheck env z ty
+         in
+           ty
+         end
 
   and typecheck env e ty =
   let val ty' = synthesize_type env e in

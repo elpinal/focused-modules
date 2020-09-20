@@ -136,6 +136,7 @@ structure Parser = MakeParser (struct
     fun eletlax (SOME v, mv, l, x) = ELetLax(mv, l, close_at_term 0 v x)
       | eletlax (NONE, mv, l, x) = ELetLax(mv, l, x)
     fun eunpack (v, ev, x, y) = EUnpack(ev, x, close_at_term 0 v y)
+    val eif = EIf
 
     datatype terminal = datatype Token.token
 

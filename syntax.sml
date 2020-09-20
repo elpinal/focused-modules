@@ -116,6 +116,7 @@ datatype term
   | ELet of var * term * term
   | EExt of module
   | ELetLax of mvar * lax_module * term
+  | EIf of term * term * term
 
 and module
   = MVar of mvar
@@ -213,6 +214,7 @@ let fun iter x = close_at_term j fv x in
    | ELet(v, x, y)      => ELet(v, iter x, iter y)
    | EExt m             => EExt(close_at_module j fv m)
    | ELetLax(v, l, x)   => ELetLax(v, close_at_lax_module j fv l, close_at_term (j + 1) fv x)
+   | EIf(x, y, z)       => EIf(iter x, iter y, iter z)
 end
 
 fun open_at_tycon j by =
@@ -292,6 +294,7 @@ let fun iter x = open_at_term j by x in
    | ELet(v, x, y)      => ELet(v, iter x, iter y)
    | EExt m             => EExt(open_at_module j by m)
    | ELetLax(v, l, x)   => ELetLax(v, open_at_lax_module j by l, open_at_term (j + 1) by x)
+   | EIf(x, y, z)       => EIf(iter x, iter y, iter z)
 end
 
 structure Singleton : sig

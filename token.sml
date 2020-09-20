@@ -23,6 +23,9 @@ structure Token = struct
     | BIND
     | BOOL
     | INT
+    | IF
+    | THEN
+    | ELSE
 
     | LOWER_IDENT of string
     | UPPER_IDENT of string
@@ -72,6 +75,9 @@ structure Token = struct
      | BIND      => "bind"
      | BOOL      => "bool"
      | INT       => "int"
+     | IF        => "if"
+     | THEN      => "then"
+     | ELSE      => "else"
 
      | LOWER_IDENT s => s
      | UPPER_IDENT s => s

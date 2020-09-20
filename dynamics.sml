@@ -20,6 +20,7 @@ datatype dyn_term
   | Proj of index * dyn_term
   | Fix of dyn_term
   | Let of dyn_var * dyn_term * dyn_term
+  | If of dyn_term * dyn_term * dyn_term
 
 fun Pack x = x
 val Unpack = Let
@@ -49,6 +50,7 @@ structure Dyn = struct
        | Proj(i, x)   => paren (n > 4) $ Show.show_index i <+> show 5 x
        | Fix x        => paren (n > 4) $ "fix" <+> show 5 x
        | Let(v, x, y) => paren (n > 0) $ "let" <+> show_var v <+> "=" <+> show 0 x <+> "in" <+> show 0 y
+       | If(x, y, z)  => paren (n > 0) $ "if" <+> show 0 x <+> "then" <+> show 0 y <+> "else" <+> show 0 z
 end
 
 (* Phase-split and take the second (i.e., dynamic) component. The result is type-erased. *)
@@ -93,6 +95,7 @@ and translate_term (e : term) : dyn_term = case e of
   | ELet(v, x, y)     => Let(E v, translate_term x, translate_term y)
   | EExt m            => snd_module m
   | ELetLax(v, l, x)  => Unpack(M v, translate_lax_module l, translate_term x)
+  | EIf(x, y, z)      => If(translate_term x, translate_term y, translate_term z)
 
 exception RuntimeError of string
 
@@ -141,6 +144,13 @@ in
          end
      | Fix x => eval env $ App(x, Abs(Wildcard, Fix x))
      | Let(v, x, y) => eval (Env.Map.insert v (eval env x) env) y
+     | If(x, y, z)  =>
+         let in
+           case eval env x of
+                Lit (LBool true)  => eval env y
+              | Lit (LBool false) => eval env z
+              | _                 => raise RuntimeError "not boolean"
+         end
 
   val evaluate = eval Env.initial
 end
