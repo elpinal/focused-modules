@@ -37,7 +37,7 @@ The syntax is what is described in the paper, extended with let-binding for ordi
 - Supports boolean and integer literals.
 
 ## References
-### A focused solution to the avoidance problem.
+### A focused solution to the avoidance problem
 
 Karl Crary.  
 Journal of Functional Programming, 30, e24, 2020.  
